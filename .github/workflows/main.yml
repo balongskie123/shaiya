@@ -26,13 +26,7 @@ jobs:
 
     # ===============================================================
     # Step 4: Build for your custom configuration (e.g., EP8_V1)
-    # ===============================================================
-    - name: Build EP8_V1 Configuration
-      # The /p:Configuration parameter tells MSBuild which configuration to use.
-      # You can use the dotnet CLI (recommended for SDK-style projects) or MSBuild.exe
-      run: dotnet build Imgeneus.sln --configuration EP8_V1 --no-restore
-      # The '--no-restore' flag prevents the build command from running restore again.
-      # Replace 'Imgeneus.sln' with your actual solution file name.
+
 
     # ===============================================================
     # Step 5 (Optional): Build for another custom configuration
