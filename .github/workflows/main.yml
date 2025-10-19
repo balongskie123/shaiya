@@ -21,8 +21,8 @@ jobs:
         dotnet-version: '8.x' # Use the version your project targets
 
     - name: Restore NuGet packages
-      run: dotnet restore MySolution.sln 
-      # OR: run: nuget restore MySolution.sln if you are using NuGet's setup action
+      run: dotnet restore Imgeneus.sln 
+      # OR: run: nuget restore Imgeneus.sln if you are using NuGet's setup action
 
     # ===============================================================
     # Step 4: Build for your custom configuration (e.g., EP8_V1)
@@ -30,16 +30,16 @@ jobs:
     - name: Build EP8_V1 Configuration
       # The /p:Configuration parameter tells MSBuild which configuration to use.
       # You can use the dotnet CLI (recommended for SDK-style projects) or MSBuild.exe
-      run: dotnet build MySolution.sln --configuration EP8_V1 --no-restore
+      run: dotnet build Imgeneus.sln --configuration EP8_V1 --no-restore
       # The '--no-restore' flag prevents the build command from running restore again.
-      # Replace 'MySolution.sln' with your actual solution file name.
+      # Replace 'Imgeneus.sln' with your actual solution file name.
 
     # ===============================================================
     # Step 5 (Optional): Build for another custom configuration
     # ===============================================================
     - name: Build SHAIYA_US Configuration
       # You can repeat the build step for any other custom configuration
-      run: dotnet build MySolution.sln --configuration SHAIYA_US --no-restore
+      run: dotnet build Imgeneus.sln --configuration SHAIYA_US --no-restore
 
     # ===============================================================
     # Step 6 (Optional): Publish the artifacts (the built files)
