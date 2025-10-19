@@ -1,42 +1,57 @@
-name: .NET Core Build
-
+name: .NET Core Build and Test
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ master ]
+    branches: [ main, master ]
 
 jobs:
   build:
-
-    runs-on: windows-latest # Use a Windows runner since it's a Visual Studio project
+    # Use a Windows runner since you are building a VS solution/C# project
+    runs-on: windows-latest 
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET SDK
+      # Installs the correct .NET SDK version (e.g., 8.x)
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 3.1.x # Project specifies .NET Core 3.1
+        dotnet-version: '8.x' # Use the version your project targets
 
-    - name: Restore dependencies
-      run: dotnet restore Imgeneus.sln
+    - name: Restore NuGet packages
+      run: dotnet restore MySolution.sln 
+      # OR: run: nuget restore MySolution.sln if you are using NuGet's setup action
 
-    - name: Build
-      run: dotnet build Imgeneus.sln --configuration Release --no-restore
+    # ===============================================================
+    # Step 4: Build for your custom configuration (e.g., EP8_V1)
+    # ===============================================================
+    - name: Build EP8_V1 Configuration
+      # The /p:Configuration parameter tells MSBuild which configuration to use.
+      # You can use the dotnet CLI (recommended for SDK-style projects) or MSBuild.exe
+      run: dotnet build MySolution.sln --configuration EP8_V1 --no-restore
+      # The '--no-restore' flag prevents the build command from running restore again.
+      # Replace 'MySolution.sln' with your actual solution file name.
 
-    - name: Test (If tests exist)
-      run: dotnet test Imgeneus.sln --no-build --verbosity normal
-      # You can remove this step if you don't care about running tests in the CI
+    # ===============================================================
+    # Step 5 (Optional): Build for another custom configuration
+    # ===============================================================
+    - name: Build SHAIYA_US Configuration
+      # You can repeat the build step for any other custom configuration
+      run: dotnet build MySolution.sln --configuration SHAIYA_US --no-restore
 
-    - name: Upload Build Artifacts
+    # ===============================================================
+    # Step 6 (Optional): Publish the artifacts (the built files)
+    # ===============================================================
+    - name: Publish EP8_V1 Artifacts
+      # Replace 'MyProjectName' with the actual name of the project you want to publish
+      run: dotnet publish MyProjectName/MyProjectName.csproj --configuration EP8_V1 -o ./publish_ep8_v1
+      
+    - name: Upload EP8_V1 Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: server-build-files
-        # Specify the paths to the compiled binaries (Login and World servers)
-        # You'll need to confirm the exact build output paths in the project!
-        path: |
-          src/Imgeneus.Login/bin/Release/netcoreapp3.1/
-          src/Imgeneus.World/bin/Release/netcoreapp3.1/
+        name: EP8_V1_build
+        path: ./publish_ep8_v1
+        
+    # Repeat the publish/upload steps for your other configurations as needed.
