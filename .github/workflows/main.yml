@@ -1,0 +1,42 @@
+name: .NET Core Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest # Use a Windows runner since it's a Visual Studio project
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 3.1.x # Project specifies .NET Core 3.1
+
+    - name: Restore dependencies
+      run: dotnet restore Imgeneus.sln
+
+    - name: Build
+      run: dotnet build Imgeneus.sln --configuration Release --no-restore
+
+    - name: Test (If tests exist)
+      run: dotnet test Imgeneus.sln --no-build --verbosity normal
+      # You can remove this step if you don't care about running tests in the CI
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: server-build-files
+        # Specify the paths to the compiled binaries (Login and World servers)
+        # You'll need to confirm the exact build output paths in the project!
+        path: |
+          src/Imgeneus.Login/bin/Release/netcoreapp3.1/
+          src/Imgeneus.World/bin/Release/netcoreapp3.1/
