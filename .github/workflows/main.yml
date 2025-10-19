@@ -40,7 +40,7 @@ jobs:
     # ===============================================================
     - name: Publish EP8_V1 Artifacts
       # Replace 'MyProjectName' with the actual name of the project you want to publish
-      run: dotnet publish MyProjectName/MyProjectName.csproj --configuration EP8_V1 -o ./publish_ep8_v1
+      run: dotnet publish src/Shaiya.Gateway/Shaiya.Gateway.csproj --configuration EP8_V1 -o ./publish_ep8_v1/gateway
       
     - name: Upload EP8_V1 Build Artifact
       uses: actions/upload-artifact@v4
